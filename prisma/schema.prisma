@@ -49,6 +49,7 @@ model User {
 
   posts Post[]
   likes Like[]
+  comments Comment[]
 }
 
 model Post {
@@ -66,6 +67,23 @@ model Post {
   createdAt   DateTime          @default(now())
 
   likes Like[]
+  comments Comment[]
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  post      Post     @relation(fields: [postId], references: [id])
+  postId    String
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+
+  content   String
+  createdAt DateTime @default(now())
+
+  // スレッド形式にしたいなら、親コメントIDをオプションで持たせる
+  parent    Comment? @relation("CommentToComment", fields: [parentId], references: [id])
+  parentId  String?
+  replies   Comment[] @relation("CommentToComment")
 }
 
 model Like {
