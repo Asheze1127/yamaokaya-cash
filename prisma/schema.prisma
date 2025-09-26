@@ -6,10 +6,75 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ---------- Enums ----------
+enum NoodleHardness {
+  HARD      // 硬め
+  NORMAL    // 普通
+  SOFT      // 柔らかめ
+}
+
+enum OilAmount {
+  EXTRA     // 多め
+  NORMAL    // 普通
+  LESS      // 少なめ
+}
+
+enum TasteLevel {
+  STRONG    // 濃いめ
+  NORMAL    // 普通
+  LIGHT     // 薄め
+}
+
+enum SustainableState {
+  STAY      // 判定待ち
+  TRUE      // 飲み干した
+  FALSE     // 飲み干していない
+}
+
+// ---------- Models ----------
+model User {
+  id                String       @id @default(uuid())
+  name              String
+  email             String       @unique
+  createdAt         DateTime     @default(now())
+  sustainablePoints Int          @default(0)
+
+  posts Post[]
+  likes Like[]
+}
+
+model Post {
+  id          String            @id @default(uuid())
+  user        User              @relation(fields: [userId], references: [id])
+  userId      String
+
+  noodleHard  NoodleHardness
+  oilAmount   OilAmount
+  tasteLevel  TasteLevel
+  photoBefore String
+  photoAfter  String
+
+  sustainable SustainableState  @default(STAY)
+  createdAt   DateTime          @default(now())
+
+  likes Like[]
+}
+
+model Like {
+  id        String @id @default(uuid())
+  user      User   @relation(fields: [userId], references: [id])
+  userId    String
+  post      Post   @relation(fields: [postId], references: [id])
+  postId    String
+  createdAt DateTime @default(now())
+
+  @@unique([userId, postId])
 }
