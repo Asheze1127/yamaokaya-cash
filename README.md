@@ -1,37 +1,102 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🍜 Yamaoka Best SNS
 
-## Getting Started
+「最高の山岡家体験」をシェアする SNS アプリです。  
+ユーザーは **麺の硬さ／脂の量／味の濃さ（Enum）** を指定し、**食前・食後の写真**をアップロードして投稿します。  
+食後写真の画像認識で「飲み干し」判定を行い、**サステナブルポイント**を付与します。  
+投稿には **いいね** と **コメント** ができます。
 
-First, run the development server:
+---
+
+## 🏗 技術スタック
+
+- [Next.js 13+ App Router](https://nextjs.org/)
+- [React 18](https://reactjs.org/)
+- [Prisma](https://www.prisma.io/) (Supabase PostgreSQL)
+- [Supabase](https://supabase.com/) (DB・認証・ストレージ)
+- [MUI](https://mui.com/) (UIコンポーネント)
+
+---
+
+## 📂 ディレクトリ構成
+
+├── prisma
+│ ├── schema.prisma # Prisma スキーマ
+│ └── migrations # マイグレーション履歴
+│ ├── 20250926132654_init
+│ └── 20250926134150_add_comments
+├── public # 画像などの静的ファイル
+└── src
+├── app # Next.js App Router ページ
+├── components
+│ ├── atoms # UI原子コンポーネント
+│ └── login # ログイン関連コンポーネント
+├── lib
+│ └── prisma.ts # PrismaClient シングルトン
+└── supabase # Supabaseクライアントやヘルパー
+
+
+---
+
+## 🗂 データベース設計（概要）
+
+- **User**  
+  名前・メールアドレス・サステナブルポイント
+- **Post**  
+  麺の硬さ・脂の量・味の濃さ（enum）／食前・食後写真（必須）／サステナブル判定ステート（`STAY`/`TRUE`/`FALSE`）
+- **Like**  
+  User と Post の中間テーブル（いいね管理）
+- **Comment**  
+  投稿に対するコメント（ユーザー・本文・スレッド対応可能）
+
+---
+
+## 🚀 セットアップ
+
+### 1. 依存関係インストール
 
 ```bash
+npm install
+2. Supabase 接続設定
+
+.env に Supabase の接続 URL を設定します：
+
+DATABASE_URL="postgresql://postgres:PASSWORD@db.xxxxx.supabase.co:5432/postgres"
+
+3. Prisma マイグレーション反映
+npx prisma migrate dev --name init
+
+4. Prisma Client 生成
+npx prisma generate
+
+5. 開発サーバー起動
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+ブラウザで http://localhost:3000 にアクセス。
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+💡 主な機能
 
-## Learn More
+ユーザー登録 / ログイン（Supabase Auth）
 
-To learn more about Next.js, take a look at the following resources:
+投稿（麺の硬さ・脂の量・味の濃さ・写真）
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+飲み干し判定（画像認識連携）
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+サステナブルポイント付与
 
-## Deploy on Vercel
+投稿へのいいね / コメント
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+ランキング・プロフィールページ（今後実装予定）
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# yamaokaya-cash
+📜 Prisma コマンド
+# DB反映（マイグレーション）
+npx prisma migrate dev --name <name>
+
+# 既存DBからスキーマ反映
+npx prisma db pull
+
+# クライアント生成
+npx prisma generate
+
+# 管理画面
+npx prisma studio

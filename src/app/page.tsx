@@ -1,11 +1,13 @@
 'use client';
 import * as React from 'react';
-import Button from '@mui/material/Button';
+import LoginContainer from '@/components/login/loginContainer';
+import { useState } from 'react';
 
 export default function Home() {
+  const [signIn, setSignIn] = useState(false);
   return (
     <div>
-      <Button variant="contained">Hello World</Button>
+          <LoginContainer isSignIn={signIn} setSignIn={setSignIn}/>
     </div>
   )
 }
