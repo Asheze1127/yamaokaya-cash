@@ -32,14 +32,30 @@ export default function LoginContainer({ isSignIn, setSignIn }: LoginContainerPr
         setLoginError('');
 
         try {
-            const { error: signInError } = await supabase.auth.signInWithPassword({
+            const { data, error: signInError } = await supabase.auth.signInWithPassword({
                 email: email,
                 password: password,
             })
             if (signInError) {
                 throw signInError;
             }
-            router.push("/top");
+
+            // ログイン成功後、セッションが確立されるまで少し待機
+            if (data.session) {
+                // セッションが確立されるまで少し待機
+                await new Promise(resolve => setTimeout(resolve, 100));
+                // ページをリロードしてセッションを確実に同期
+                window.location.href = "/top";
+            } else {
+                // セッションが即座に取得できない場合、少し待ってから再試行
+                await new Promise(resolve => setTimeout(resolve, 500));
+                const { data: retryData } = await supabase.auth.getSession();
+                if (retryData.session) {
+                    window.location.href = "/top";
+                } else {
+                    router.push("/top");
+                }
+            }
         } catch (error: any) {
             console.log(error);
             if (error.message?.includes('Invalid login credentials')) {

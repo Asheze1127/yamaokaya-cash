@@ -62,6 +62,7 @@ model Post {
   tasteLevel  TasteLevel
   photoBefore String
   photoAfter  String
+  comment     String?           // 投稿時のコメント(任意)
 
   sustainable SustainableState  @default(STAY)
   createdAt   DateTime          @default(now())
