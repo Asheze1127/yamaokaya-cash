@@ -9,7 +9,9 @@ import {
   Typography,
   CardMedia,
   Box,
-  Chip
+  Chip,
+  MenuItem,
+  Menu
 } from '@mui/material';
 import { red } from '@mui/material/colors';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -18,6 +20,8 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import RepeatIcon from '@mui/icons-material/Repeat';
 import { Post } from '@/types'; // Import the shared Post type
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient();
 
 // Helper function to format the date
 function formatDate(dateString: string) {
@@ -44,14 +48,49 @@ const customizationLabels = {
 };
 
 export default function PostCard({ post }: { post: Post }) {
+
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+
+  const deletePost = async (id: string) => {
+    console.log(id);
+    const response = await fetch(`/api/posts`, {
+      method: 'DELETE',
+      body: JSON.stringify({ id: id }),
+    });
+    // const response = await prisma.post.delete({
+    //   where: { id: id },
+    // });
+    // console.log(response);
+  };
+
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+  
   return (
     <Card sx={{ mb: 2 }}>
       <CardHeader
         avatar={<Avatar sx={{ bgcolor: red[500] }}>{post.user.name.charAt(0)}</Avatar>}
-        action={<IconButton aria-label="settings"><MoreVertIcon /></IconButton>}
+        action={
+        <IconButton aria-label="settings" onClick={handleMenuOpen}>
+          <MoreVertIcon />
+        </IconButton>
+        }
         title={post.user.name}
         subheader={formatDate(post.createdAt)}
       />
+      <Menu
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleMenuClose}
+      >
+        <MenuItem onClick={() => deletePost(post.id)}>削除</MenuItem>
+      </Menu>
       <Box sx={{ display: 'flex', gap: 0.5 }}>
         <Box sx={{ flex: 1 }}>
           <CardMedia
