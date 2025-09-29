@@ -56,9 +56,9 @@ export default function LoginContainer({ isSignIn, setSignIn }: LoginContainerPr
                     router.push("/top");
                 }
             }
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.log(error);
-            if (error.message?.includes('Invalid login credentials')) {
+            if (error instanceof Error && error.message?.includes('Invalid login credentials')) {
                 setLoginError('メールアドレスまたはパスワードが正しくありません');
             } else {
                 setLoginError('ログインに失敗しました。もう一度お試しください');

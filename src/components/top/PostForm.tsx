@@ -15,6 +15,7 @@ import {
   TextField,
 } from '@mui/material';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+import Image from 'next/image';
 import { createPost, updatePostWithImages } from '@/app/top/actions'; // updatePostWithImagesをインポート
 import { supabase } from '@/lib/supabase';
 
@@ -44,6 +45,7 @@ const ImageUploadBox = styled(Box)(({ theme }) => ({
   cursor: 'pointer',
   color: theme.palette.text.secondary,
   transition: 'border-color 0.3s',
+  position: 'relative',
   '&:hover': {
     borderColor: theme.palette.primary.main,
   },
@@ -242,7 +244,7 @@ export default function PostForm() {
           <Button component="label" variant="text" sx={{ p: 0, height: '100%' }}>
             <ImageUploadBox>
               {beforeImageUrl ? (
-                <img src={beforeImageUrl} alt="食前の写真プレビュー" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 'inherit' }} />
+                <Image src={beforeImageUrl} alt="食前の写真プレビュー" fill style={{ objectFit: 'cover', borderRadius: 'inherit' }} />
               ) : (
                 <>
                   <AddPhotoAlternateIcon sx={{ fontSize: 40, mb: 1 }} />
@@ -258,7 +260,7 @@ export default function PostForm() {
           <Button component="label" variant="text" sx={{ p: 0, height: '100%' }}>
             <ImageUploadBox>
               {afterImageUrl ? (
-                <img src={afterImageUrl} alt="食後の写真プレビュー" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 'inherit' }} />
+                <Image src={afterImageUrl} alt="食後の写真プレビュー" fill style={{ objectFit: 'cover', borderRadius: 'inherit' }} />
               ) : (
                 <>
                   <AddPhotoAlternateIcon sx={{ fontSize: 40, mb: 1 }} />

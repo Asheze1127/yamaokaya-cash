@@ -10,7 +10,7 @@ export async function createClient() {
     for (const cookie of cookieStore.getAll()) {
       cookieMap.set(cookie.name, cookie.value);
     }
-  } catch (error) {
+  } catch {
     // This may fail in some environments, but the `get` method will fall back.
   }
 
@@ -27,14 +27,14 @@ export async function createClient() {
           // If it fails, fall back to the original method, which might still work in some cases.
           try {
             return cookieStore.get(name)?.value;
-          } catch (error) {
+          } catch {
             return undefined;
           }
         },
         set(name: string, value: string, options: CookieOptions) {
           try {
             cookieStore.set({ name, value, ...options });
-          } catch (error) {
+          } catch {
             // The `set` method was called from a Server Component.
             // This can be ignored if you have middleware refreshing user sessions.
           }
@@ -42,7 +42,7 @@ export async function createClient() {
         remove(name: string, options: CookieOptions) {
           try {
             cookieStore.set({ name, value: '', ...options });
-          } catch (error) {
+          } catch {
             // The `delete` method was called from a Server Component.
             // This can be ignored if you have middleware refreshing user sessions.
           }
