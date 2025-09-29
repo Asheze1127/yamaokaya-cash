@@ -62,21 +62,27 @@ export default function ProfilePage() {
     }
 
     return (
-        <>
-            <Header onLogout={onLogout} />
-            <Box sx={{
-            display: { xs: 'none', sm: 'block' },
-            width: { sm: '200px' },
-            flexShrink: 0
-            }}>
-            <LeftSidebar />
+        <Box sx={{ display: 'flex', minHeight: '100vh' }}>
+            <Box
+                sx={{
+                    display: { xs: 'none', sm: 'block' },
+                    width: { sm: '200px' },
+                    flexShrink: 0
+                }}
+            >
+                <LeftSidebar />
             </Box>
-            <Container component="main" maxWidth="sm" sx={{ mt: 4, mb: 4 }}>
-                <PostForm />
-                <Box sx={{ mt: 5, borderTop: '1px solid #eee', pt: 5 }}>
-                    <Timeline />
+            <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+                <Box sx={{ flexShrink: 0 }}>
+                    <Header onLogout={onLogout} />
                 </Box>
-            </Container>
-        </>
+                <Container component="main" maxWidth="sm" sx={{ mt: 4, mb: 4, flexGrow: 1 }}>
+                    <PostForm />
+                    <Box sx={{ mt: 5, borderTop: '1px solid #eee', pt: 5 }}>
+                        <Timeline />
+                    </Box>
+                </Container>
+            </Box>
+        </Box>
     )
 }
