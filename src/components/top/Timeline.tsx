@@ -47,7 +47,7 @@ export default function Timeline() {
       {posts.length > 0 ? (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
           {posts.map((post) => (
-            <PostCard key={post.id} post={post} />
+            <PostCard key={post.id} post={post} sustainable={post.sustainable} />
           ))}
         </Box>
       ) : (
