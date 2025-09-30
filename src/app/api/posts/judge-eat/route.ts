@@ -57,7 +57,7 @@ export async function POST() {
                 const errorMsg = `Post ${post.id}: ${err instanceof Error ? err.message : String(err)}`
                 errors.push(errorMsg)
 
-                if (err instanceof Error && (err.message?.includes('quota') || (err as any).response?.status === 429)) {
+                if (err instanceof Error && (err.message?.includes('quota') || (err as { response?: { status?: number } }).response?.status === 429)) {
                     console.warn('Quota exceeded, stop processing.')
                     break
                 }
