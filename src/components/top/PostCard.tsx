@@ -47,7 +47,7 @@ const customizationLabels = {
   },
 };
 
-export default function PostCard({ post }: { post: Post }) {
+export default function PostCard({ post, sustainable }: { post: Post, sustainable: string }) {
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -71,15 +71,19 @@ export default function PostCard({ post }: { post: Post }) {
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
-  
+
   return (
-    <Card sx={{ mb: 2 }}>
+    <Card sx={{
+      mb: 2,
+      backgroundColor: sustainable === 'TRUE' ? '#ffebee' : 'inherit',
+      border: sustainable === 'TRUE' ? '2px solid #f44336' : 'none'
+    }}>
       <CardHeader
         avatar={<Avatar sx={{ bgcolor: red[500] }}>{post.user.name.charAt(0)}</Avatar>}
         action={
-        <IconButton aria-label="settings" onClick={handleMenuOpen}>
-          <MoreVertIcon />
-        </IconButton>
+          <IconButton aria-label="settings" onClick={handleMenuOpen}>
+            <MoreVertIcon />
+          </IconButton>
         }
         title={post.user.name}
         subheader={formatDate(post.createdAt)}
@@ -117,6 +121,22 @@ export default function PostCard({ post }: { post: Post }) {
           <Chip label={customizationLabels.oilAmount[post.oilAmount as keyof typeof customizationLabels.oilAmount]} size="small" />
           <Chip label={customizationLabels.tasteLevel[post.tasteLevel as keyof typeof customizationLabels.tasteLevel]} size="small" />
         </Box>
+        {sustainable === 'TRUE' && (
+          <Box sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1,
+            mb: 1,
+            p: 1,
+            backgroundColor: '#e8f5e8',
+            borderRadius: 1,
+            border: '1px solid #4caf50'
+          }}>
+            <Typography variant="h6" color="#2e7d32" sx={{ fontWeight: 'bold' }}>
+              完飲！SDGs！🍜
+            </Typography>
+          </Box>
+        )}
         {post.comment && (
           <Typography variant="body2" color="text.secondary">
             {post.comment}
